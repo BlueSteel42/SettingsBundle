@@ -1,0 +1,3 @@
+blue_steel42_settings_homepage:
+    path:     /
+    defaults: { _controller: BlueSteel42SettingsBundle:Default:index }

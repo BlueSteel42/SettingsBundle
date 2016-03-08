@@ -1,4 +1,15 @@
 services:
-#    blue_steel42_settings.example:
-#        class: BlueSteel42\SettingsBundle\Example
-#        arguments: ["@service_id", "plain_value", %parameter%]
+  bluesteel42.settings:
+    class: BlueSteel42\SettingsBundle\Service\Settings
+    arguments:
+      - "@bluesteel42.settings.adapter"
+  bluesteel42.settings.adapter_doctrine:
+    class: BlueSteel42\SettingsBundle\Adapter\DoctrineAdapter
+    public: false
+  bluesteel42.settings.adapter_yml:
+    class: BlueSteel42\SettingsBundle\Adapter\YmlAdapter
+    alias: bluesteel42.settings.adapter
+    public: false
+  bluesteel42.settings.adapter_xml:
+    class: BlueSteel42\SettingsBundle\Adapter\XmlAdapter
+    public: false

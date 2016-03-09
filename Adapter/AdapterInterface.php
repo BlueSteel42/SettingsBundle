@@ -3,8 +3,8 @@
 namespace BlueSteel42\SettingsBundle\Adapter;
 
 /**
- * Configuration Layer Interface
  * @author Umberto Stefani <umbe81@gmail.com>
+ * @author Tonio Carta <plutonio21@gmail.com>
  */
 
 interface AdapterInterface

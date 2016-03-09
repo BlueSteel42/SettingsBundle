@@ -2,13 +2,27 @@
 
 namespace BlueSteel42\SettingsBundle\Adapter;
 
+use Symfony\Bridge\Doctrine\RegistryInterface;
+
 /**
- * Configuration Layer Interface
  * @author Umberto Stefani <umbe81@gmail.com>
+ * @author Tonio Carta <plutonio21@gmail.com>
  */
 
 class DoctrineAdapter implements AdapterInterface
 {
+
+    protected $doctrine;
+    protected $connection;
+    protected $tableName;
+
+    public function __construct(RegistryInterface $doctrine, $connection, $tableName)
+    {
+        $this->doctrine = $doctrine;
+        $this->connection = $connection;
+        $this->tableName = $tableName;
+    }
+
     /**
      * @inheritDoc
      */

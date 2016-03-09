@@ -2,13 +2,27 @@
 
 namespace BlueSteel42\SettingsBundle\Adapter;
 
+use Symfony\Component\HttpKernel\Config\FileLocator;
+
 /**
- * Configuration Layer Interface
  * @author Umberto Stefani <umbe81@gmail.com>
+ * @author Tonio Carta <plutonio21@gmail.com>
  */
 
 class YmlAdapter implements AdapterInterface
 {
+
+    protected $locator;
+
+    protected $path;
+
+    public function __construct(FileLocator $locator, $path)
+    {
+        $this->locator = $locator;
+
+        $this->path = $path;
+    }
+
     /**
      * @inheritDoc
      */

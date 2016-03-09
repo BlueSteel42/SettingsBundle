@@ -1,15 +1,34 @@
+parameters:
+  bluesteel42.settings.yml.path: "@@BlueSteel42SettingsBundle/Resources/data"
+  bluesteel42.settings.xml.path: "@@BlueSteel42SettingsBundle/Resources/data"
+  bluesteel42.settings.doctrine.connection: "default"
+  bluesteel42.settings.doctrine.table: "bluesteel42_settings"
+
 services:
+
   bluesteel42.settings:
     class: BlueSteel42\SettingsBundle\Service\Settings
     arguments:
-      - "@bluesteel42.settings.adapter"
-  bluesteel42.settings.adapter_doctrine:
+      - "@bluesteel42.settings.adapter_yml"
+
+  bluesteel42.settings.adapter_doctrinedbal:
     class: BlueSteel42\SettingsBundle\Adapter\DoctrineAdapter
+    arguments:
+      - "@doctrine"
+      - "%bluesteel42.settings.doctrine.connection%"
+      - "%bluesteel42.settings.doctrine.table%"
     public: false
+
   bluesteel42.settings.adapter_yml:
     class: BlueSteel42\SettingsBundle\Adapter\YmlAdapter
-    alias: bluesteel42.settings.adapter
+    arguments:
+      - "@file_locator"
+      - "%bluesteel42.settings.yml.path%"
     public: false
+
   bluesteel42.settings.adapter_xml:
     class: BlueSteel42\SettingsBundle\Adapter\XmlAdapter
+    arguments:
+      - "@file_locator"
+      - "%bluesteel42.settings.xml.path%"
     public: false

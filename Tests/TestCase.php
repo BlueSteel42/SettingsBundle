@@ -3,12 +3,23 @@
 namespace BlueSteel42\SettingsBundle\Tests;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use BlueSteel42\SettingsBundle\Tests\app\AppKernel;
 
 use BlueSteel42\SettingsBundle\DependencyInjection\BlueSteel42SettingsExtension;
 use BlueSteel42\SettingsBundle\BlueSteel42SettingsBundle;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class TestCase extends \PHPUnit_Framework_TestCase
 {
+
+    /**
+     * @var KernelInterface[]
+     */
+    protected $kernels = array('yml' => null, 'xml' => null, 'doctrinedbal' => null);
+
+    /**
+     * @return ContainerBuilder
+     */
     protected function getRawContainer()
     {
         $container = new ContainerBuilder();
@@ -24,11 +35,17 @@ class TestCase extends \PHPUnit_Framework_TestCase
         return $container;
     }
 
-    protected function getContainer()
+    /**
+     * @param string $environment
+     * @param bool $debug
+     * @return KernelInterface
+     */
+    protected function getKernel($environment, $debug = true)
     {
-        $container = $this->getRawContainer();
-        $container->compile();
+        if (null == $this->kernels[$environment]) {
+            $this->kernels[$environment] = new AppKernel($environment, $debug);
+        }
 
-        return $container;
+        return $this->kernels[$environment];
     }
 }

@@ -33,5 +33,9 @@ class Settings
         return $this;
     }
 
+    public function getAll()
+    {
+        return $this->adapter->getAll();
+    }
 
 }

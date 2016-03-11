@@ -19,7 +19,7 @@ class Configuration implements ConfigurationInterface
             ->beforeNormalization()
                 ->always(function($v) {
                     if (!is_array($v) || !isset($v['backend'])) {
-                        return ['backend' => null];
+                        return array('backend' => null);
                     }
                     return $v;
                 })
@@ -28,12 +28,12 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('backend')
                     ->beforeNormalization()
                         ->ifString()
-                        ->then(function($v) { return [$v => null ]; })
+                        ->then(function($v) { return array($v => null ); })
                     ->end()
-                    ->treatNullLike(['yml' => null])
+                    ->treatNullLike(array('yml' => null))
                     ->children()
                         ->arrayNode('doctrinedbal')
-                            ->treatNullLike(['connection' => 'default'])
+                            ->treatNullLike(array('connection' => 'default'))
                             ->children()
                                 ->scalarNode('connection')
                                     ->defaultValue('default')
@@ -42,7 +42,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->arrayNode('yml')
-                            ->treatNullLike(['path' => '@BlueSteel42SettingsBundle/Resources/data'])
+                            ->treatNullLike(array('path' => '@BlueSteel42SettingsBundle/Resources/data'))
                             ->children()
                                 ->scalarNode('path')
                                     ->defaultValue('@BlueSteel42SettingsBundle/Resources/data')
@@ -51,7 +51,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->arrayNode('xml')
-                            ->treatNullLike(['path' => '@BlueSteel42SettingsBundle/Resources/data'])
+                            ->treatNullLike(array('path' => '@BlueSteel42SettingsBundle/Resources/data'))
                             ->children()
                                 ->scalarNode('path')
                                     ->defaultValue('@BlueSteel42SettingsBundle/Resources/data')

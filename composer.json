@@ -1,0 +1,37 @@
+{
+    "name": "bluesteel42/settings-bundle",
+    "type": "symfony-bundle",
+    "description": "The BlueSteel42 Settings Bundle",
+    "homepage": "https://github.com/BlueSteel42/SettingsBundle",
+    "keywords": ["settings"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tonio Carta",
+            "role": "Developer"
+        },
+        {
+            "name": "Umberto Stefani",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.9",
+        "symfony/framework-bundle": ">=2.7"
+    },
+    "require-dev": {
+        "symfony/yaml": "~2.8|~3.0",
+        "symfony/dom-crawler": "~2.0,>=2.0.5|~3.0.0"
+    },
+    "suggest": {
+        "doctrine/doctrine-bundle": "when using doctrinedbal as backend",
+        "symfony/yaml": "when using yml backend",
+        "symfony/dom-crawler": "when using xml backend"
+    },
+    "autoload": {
+        "psr-4": {
+            "BlueSteel42\\SettingsBundle": "src/BlueSteel42/SettingsBundle"
+        }
+    },
+    "minimum-stability": "dev"
+}

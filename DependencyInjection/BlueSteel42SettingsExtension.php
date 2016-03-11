@@ -28,7 +28,7 @@ class BlueSteel42SettingsExtension extends Extension
                 break;
         }
 
-        $unused_backends = array_diff(['yml', 'xml', 'doctrinedbal'], [$backend]);
+        $unused_backends = array_diff(array('yml', 'xml', 'doctrinedbal'), array($backend));
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');

@@ -2,56 +2,33 @@
 
 namespace BlueSteel42\SettingsBundle\Adapter;
 
-use Symfony\Component\HttpKernel\Config\FileLocator;
+use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Yaml\Dumper;
+
 
 /**
  * @author Umberto Stefani <umbe81@gmail.com>
  * @author Tonio Carta <plutonio21@gmail.com>
  */
-
-class YmlAdapter implements AdapterInterface
+class YmlAdapter extends AbstractBaseFileAdapter
 {
 
-    protected $locator;
-
-    protected $path;
-
-    public function __construct(FileLocator $locator, $path)
-    {
-        $this->locator = $locator;
-
-        $this->path = $path;
-    }
 
     /**
-     * @inheritDoc
+     * @return array
      */
-    public function get($name)
+    protected function doGetValues()
     {
-        // TODO: Implement get() method.
+        return (new Parser())->parse($this->getFileContents());
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function set($name, $value)
+    public function flush()
     {
-        // TODO: Implement set() method.
+        // TODO: Implement flush() method.
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getAll()
+    protected function getFileName()
     {
-        // TODO: Implement getAll() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setAll()
-    {
-        // TODO: Implement setAll() method.
+        return 'bluesteel42_settings.yml';
     }
 }

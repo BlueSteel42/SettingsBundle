@@ -44,6 +44,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
     {
         if (null == $this->kernels[$environment]) {
             $this->kernels[$environment] = new AppKernel($environment, $debug);
+            $this->kernels[$environment]->boot();
         }
 
         return $this->kernels[$environment];

@@ -5,11 +5,12 @@ namespace BlueSteel42\SettingsBundle\Command;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
+
 
 class InstallCommand extends AbstractInstallCommand
 {
@@ -20,7 +21,7 @@ class InstallCommand extends AbstractInstallCommand
             ->setDescription('Install SettingsBundle configurations enviroment.')
             ->addOption('connection', null, InputOption::VALUE_OPTIONAL, 'Doctrine Connection')
             ->addOption('table_name', null, InputOption::VALUE_OPTIONAL, 'Table Name')
-            ->addOption('mysql-dump', null, InputOption::VALUE_NONE, 'Dump output query (no commit)')
+            ->addOption('sql-dump', null, InputOption::VALUE_NONE, 'Dump output query (no commit)')
             ->setHelp(<<<EOT
 The <info>%command.name%</info> prepare configuration environment to starting to use SettingsBundle.
 The <comment>connection</comment> parameter will set database connection to use.
@@ -36,7 +37,7 @@ Example 2 - No arguments (console interaction needed):
 
 Example 3 - With option
 
-./console <info>%command.name%</info> --mysql-dump
+./console <info>%command.name%</info> --sql-dump
 
 EOT
             );
@@ -49,7 +50,7 @@ EOT
         $useQuestionTable = false;
         $argConnection = $input->getOption('connection');
         $argTable = $input->getOption('table_name');
-        $dump = $input->getOption('mysql-dump');
+        $dump = $input->getOption('sql-dump');
 
         if (!$argConnection && !$argTable) {
             $con = ($this->getContainer()->getParameter('bluesteel42.settings.doctrine.connection'));
@@ -90,7 +91,7 @@ EOT
             $conAnswer = ($useQuestionCon) ? $this->getHelper('question')->ask($input, $output, $conQuestion) : $argConnection;
             $tblAnswer = ($useQuestionTable) ? $this->getHelper('question')->ask($input, $output, $tblQuestion) : $argTable;
 
-            $em = $this->getContainer()->get('doctrine')->getEntityManager($conAnswer);
+            $em = $this->getContainer()->get('doctrine')->getManager($conAnswer);
             $conn = $em->getConnection();
             $sm = $conn->getSchemaManager();
 

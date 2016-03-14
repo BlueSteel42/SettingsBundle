@@ -3,30 +3,40 @@
 
 namespace BlueSteel42\SettingsBundle\Command;
 
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
-use Symfony\Component\Config\FileLocator;
 
 class InstallCommand extends AbstractInstallCommand
 {
     protected function configure()
     {
         $this
-            ->setName('bluesteel42:install')
+            ->setName('bluesteel42_settings:install')
             ->setDescription('Install SettingsBundle configurations enviroment.')
+            ->addOption('connection', null, InputOption::VALUE_OPTIONAL, 'Doctrine Connection')
+            ->addOption('table_name', null, InputOption::VALUE_OPTIONAL, 'Table Name')
             ->addOption('mysql-dump', null, InputOption::VALUE_NONE, 'Dump output query (no commit)')
             ->setHelp(<<<EOT
-The <info>%command.name%</info> prepare configuration enviroment to starting to use SettingsBundle.
+The <info>%command.name%</info> prepare configuration environment to starting to use SettingsBundle.
+The <comment>connection</comment> parameter will set database connection to use.
+The <comment>table_name</comment> parameter will set table name.
 
-For example, ./console <info>%command.name%</info> --mysql-dump
+Example 1 - With arguments:
 
-will simulate install dumping mysql query in output.
+./console <info>%command.name%</info> --connection=default --table_name=bluesteel42_settings
 
-./console <info>%command.name%</info> will proceed with installation instead.
+Example 2 - No arguments (console interaction needed):
+
+./console <info>%command.name%</info>
+
+Example 3 - With option
+
+./console <info>%command.name%</info> --mysql-dump
 
 EOT
             );
@@ -34,7 +44,31 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
+        $useQuestionCon = false;
+        $useQuestionTable = false;
+        $argConnection = $input->getOption('connection');
+        $argTable = $input->getOption('table_name');
         $dump = $input->getOption('mysql-dump');
+
+        if (!$argConnection && !$argTable) {
+            $con = ($this->getContainer()->getParameter('bluesteel42.settings.doctrine.connection'));
+            $tbl = ($this->getContainer()->getParameter('bluesteel42.settings.doctrine.table'));
+            $useQuestionCon = true;
+            $useQuestionTable = true;
+        } elseif ($argConnection && !$argTable) {
+            $con = $argConnection;
+            $tbl = ($this->getContainer()->getParameter('bluesteel42.settings.doctrine.table'));
+            $useQuestionTable = true;
+        } elseif (!$argConnection && $argTable) {
+            $con = ($this->getContainer()->getParameter('bluesteel42.settings.doctrine.connection'));
+            $useQuestionCon = true;
+            $tbl = $argTable;
+        } else {
+            $con = $argConnection;
+            $tbl = $argTable;
+        }
+
         $yml = new Parser();
         $cfg = null;
         try {
@@ -51,14 +85,10 @@ EOT
                 $cfgFile = $locator->locate(sprintf('bluesteel42_settings.%s', $ext), sprintf($this->getContainer()->getParameter(sprintf('bluesteel42.settings.%s.path', $ext), false)));
             }
 
-            $con = ($this->getContainer()->getParameter('bluesteel42.settings.doctrine.connection'));
-            $tbl = ($this->getContainer()->getParameter('bluesteel42.settings.doctrine.table'));
-
             $conQuestion = new Question(sprintf('<question>Please select Doctrine Connection: [%s]</question>', $con), $con);
-            $conAnswer = $this->getHelper('question')->ask($input, $output, $conQuestion);
-
             $tblQuestion = new Question(sprintf('<question>Please select Table Name: [%s]</question>', $tbl), $tbl);
-            $tblAnswer = $this->getHelper('question')->ask($input, $output, $tblQuestion);
+            $conAnswer = ($useQuestionCon) ? $this->getHelper('question')->ask($input, $output, $conQuestion) : $argConnection;
+            $tblAnswer = ($useQuestionTable) ? $this->getHelper('question')->ask($input, $output, $tblQuestion) : $argTable;
 
             $em = $this->getContainer()->get('doctrine')->getEntityManager($conAnswer);
             $conn = $em->getConnection();
@@ -67,7 +97,7 @@ EOT
             $tableExists = $sm->tablesExist($tblAnswer);
             if (!$tableExists) {
                 $conn->beginTransaction();
-                try{
+                try {
                     $fromSchema = $sm->createSchema();
                     $toSchema = clone $fromSchema;
 
@@ -86,12 +116,12 @@ EOT
                             $output->writeln(sprintf("Table %s successfuly created.", $tblAnswer));
                         }
                     }
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $conn->rollBack();
                     throw $e;
                 }
             } else {
-                if($dump) {
+                if ($dump) {
                     $sql = sprintf("CREATE TABLE %s (id VARCHAR(255) NOT NULL UNIQUE, val LONGTEXT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB", $tblAnswer);
                     $output->writeln(sprintf("<comment>%s</comment>", $sql));
                 } else {

@@ -112,7 +112,7 @@ abstract class AbstractAdapter implements AdapterInterface
     protected function getValues()
     {
         if ($this->values === null) {
-            $this->values = $this->doGetValues();
+            $this->values = (array)$this->doGetValues();
         }
 
         return $this->values;

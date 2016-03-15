@@ -2,73 +2,97 @@
 
 namespace BlueSteel42\SettingsBundle\Adapter;
 
-use Symfony\Component\HttpKernel\Config\FileLocator;
 
 /**
  * @author Umberto Stefani <umbe81@gmail.com>
  * @author Tonio Carta <plutonio21@gmail.com>
  */
 
-class XmlAdapter implements AdapterInterface
+class XmlAdapter extends AbstractBaseFileAdapter
 {
 
-    protected $locator;
-
-    protected $path;
-
-    public function __construct(FileLocator $locator, $path)
-    {
-        $this->locator = $locator;
-
-        $this->path = $path;
-    }
-
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
-    public function get($name)
+    protected function doGetValues()
     {
-        // TODO: Implement get() method.
+        $contents = $this->getFileContents();
+
+        $dom = new \DOMDocument();
+        $dom->loadXML($contents);
+        $root = $dom->getElementsByTagName('root')->item(0);
+
+        return $this->loadSection($root);
     }
 
     /**
-     * @inheritDoc
-     */
-    public function set($name, $value)
-    {
-        // TODO: Implement set() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAll()
-    {
-        // TODO: Implement getAll() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setAll()
-    {
-        // TODO: Implement setAll() method.
-    }
-
-    /**
-     * @param $name
-     * @return AdapterInterface
-     */
-    public function delete($name)
-    {
-        // TODO: Implement delete() method.
-    }
-
-    /**
-     * @return AdapterInterface
+     * @inheritdoc
      */
     public function flush()
     {
-        // TODO: Implement flush() method.
+        $dom = new \DOMDocument();
+        $root = $dom->createElement('root');
+        $this->createChildren($root, $this->getValues());
+        $dom->appendChild($root);
+
+        $this->setFileContents($dom->saveXML());
+
+        return $this;
+    }
+
+    /**
+     * @param \DOMElement $node
+     * @param array $children
+     */
+    protected function createChildren(\DOMElement $node, array $children)
+    {
+        foreach ($children as $childName => $childValue) {
+            if (is_array($childValue)) {
+                $child = $node->appendChild(new \DOMElement($childName));
+                $this->createChildren($child, $childValue);
+            } else {
+                $node->appendChild(new \DOMElement($childName, $childValue));
+            }
+        }
+    }
+
+    /**
+     * @param \DOMElement $node
+     * @return array
+     */
+    protected function loadSection(\DOMElement $node)
+    {
+        $values = array();
+
+        foreach ($node->childNodes as $childNode) {
+            if ($childNode->hasChildNodes()) {
+                if ($childNode->childNodes->length == 1 && $childNode->childNodes->item(0) instanceof \DOMText) {
+                    $values[$childNode->nodeName] = $childNode->nodeValue;
+                } else {
+                    $values[$childNode->nodeName] = $this->loadSection($childNode);
+                }
+            }
+        }
+        return $values;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getFileContents()
+    {
+        $contents = parent::getFileContents();
+        if ('' === $contents) {
+            $contents = '<root></root>';
+        }
+        return $contents;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function getFileName()
+    {
+        return 'bluesteel42_settings.xml';
     }
 }

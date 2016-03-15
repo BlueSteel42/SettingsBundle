@@ -15,6 +15,8 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('bluesteel42_settings');
 
+        $defaultPath = '%kernel.cache_dir%/../data/bluesteel42_settings%';
+
         $rootNode
             ->beforeNormalization()
                 ->always(function($v) {
@@ -42,20 +44,20 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->arrayNode('yml')
-                            ->treatNullLike(array('path' => '@BlueSteel42SettingsBundle/Resources/data'))
+                            ->treatNullLike(array('path' => $defaultPath))
                             ->children()
                                 ->scalarNode('path')
-                                    ->defaultValue('@BlueSteel42SettingsBundle/Resources/data')
-                                    ->treatNullLike('@BlueSteel42SettingsBundle/Resources/data')
+                                    ->defaultValue($defaultPath)
+                                    ->treatNullLike($defaultPath)
                                 ->end()
                             ->end()
                         ->end()
                         ->arrayNode('xml')
-                            ->treatNullLike(array('path' => '@BlueSteel42SettingsBundle/Resources/data'))
+                            ->treatNullLike(array('path' => $defaultPath))
                             ->children()
                                 ->scalarNode('path')
-                                    ->defaultValue('@BlueSteel42SettingsBundle/Resources/data')
-                                    ->treatNullLike('@BlueSteel42SettingsBundle/Resources/data')
+                                    ->defaultValue($defaultPath)
+                                    ->treatNullLike($defaultPath)
                                 ->end()
                             ->end()
                         ->end()

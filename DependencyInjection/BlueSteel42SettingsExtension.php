@@ -21,17 +21,17 @@ class BlueSteel42SettingsExtension extends Extension
 
         $backend = key($config['backend']);
 
+        $unused_backends = array_diff(array('yml', 'xml', 'doctrinedbal'), array($backend));
+
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.yml');
+
         switch($backend) {
             case 'xml':
             case 'yml':
                 $container->setParameter('bluesteel42.settings.' . $backend . '.path', $config['backend'][$backend]['path']);
                 break;
         }
-
-        $unused_backends = array_diff(array('yml', 'xml', 'doctrinedbal'), array($backend));
-
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
 
         $container->getDefinition('bluesteel42.settings')->replaceArgument(0, new Reference('bluesteel42.settings.adapter_'.$backend));
 

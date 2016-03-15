@@ -1,6 +1,6 @@
 parameters:
-  bluesteel42.settings.yml.path: "@@BlueSteel42SettingsBundle/Resources/data"
-  bluesteel42.settings.xml.path: "@@BlueSteel42SettingsBundle/Resources/data"
+  bluesteel42.settings.yml.path: "%kernel.cache_dir%/../data/bluesteel42_settings%"
+  bluesteel42.settings.xml.path: "%kernel.cache_dir%/../data/bluesteel42_settings%"
   bluesteel42.settings.doctrine.connection: "default"
   bluesteel42.settings.doctrine.table: "bluesteel42_settings"
 

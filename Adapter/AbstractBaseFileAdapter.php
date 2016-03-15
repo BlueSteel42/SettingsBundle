@@ -30,6 +30,9 @@ abstract class AbstractBaseFileAdapter extends AbstractAdapter
         $this->path = $this->locator->locate($path);
     }
 
+    /**
+     * @return string
+     */
     protected function getFileContents()
     {
         $filename = $this->path . DIRECTORY_SEPARATOR . $this->getFileName();
@@ -41,6 +44,10 @@ abstract class AbstractBaseFileAdapter extends AbstractAdapter
         return file_get_contents($filename);
     }
 
+    /**
+     * @param $content
+     * @return AbstractBaseFileAdapter
+     */
     protected function setFileContents($content)
     {
         $filename = $this->path . DIRECTORY_SEPARATOR . $this->getFileName();

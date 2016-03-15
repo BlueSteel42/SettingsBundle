@@ -68,6 +68,9 @@ abstract class AbstractAdapter implements AdapterInterface
         return $this->accessor;
     }
 
+    /**
+     * @return array
+     */
     protected function getValues()
     {
         if ($this->values === null) {
@@ -77,5 +80,8 @@ abstract class AbstractAdapter implements AdapterInterface
         return $this->values;
     }
 
+    /**
+     * @return array
+     */
     protected abstract function doGetValues();
 }

@@ -106,6 +106,9 @@ abstract class AbstractAdapter implements AdapterInterface
         return $this->accessor;
     }
 
+    /**
+     * @return array
+     */
     protected function getValues()
     {
         if ($this->values === null) {
@@ -115,6 +118,10 @@ abstract class AbstractAdapter implements AdapterInterface
         return $this->values;
     }
 
+    /**
+     * @param string $dirtyPath
+     * @return string
+     */
     protected function normalizePath($dirtyPath)
     {
         $path = new PropertyPath($dirtyPath);
@@ -122,5 +129,8 @@ abstract class AbstractAdapter implements AdapterInterface
         return sprintf('[%s]', implode('][', $path->getElements()));
     }
 
+    /**
+     * @return array
+     */
     protected abstract function doGetValues();
 }

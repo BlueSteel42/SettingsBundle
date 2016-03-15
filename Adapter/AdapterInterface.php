@@ -35,11 +35,13 @@ interface AdapterInterface
 
     /**
      * @param array $values Full array of values to be set
-     * @return mixed
+     * @return AdapterInterface
      */
     public function setAll(array $values);
 
     /**
+     * Flush changes
+     *
      * @return AdapterInterface
      */
     public function flush();

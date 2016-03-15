@@ -15,21 +15,27 @@ class YmlAdapter extends AbstractBaseFileAdapter
 
 
     /**
-     * @return array
+     * @inheritdoc
      */
     protected function doGetValues()
     {
         return (array)(new Parser())->parse($this->getFileContents());
     }
 
+    /**
+     * @inheritdoc
+     */
     public function flush()
     {
-        $yaml = (new Dumper())->dump($this->getValues(), 120);
-        $this->setFileContents($yaml);
+        $dumper = new Dumper();
+        $this->setFileContents($dumper->dump($this->getValues(), 20));
 
         return $this;
     }
 
+    /**
+     * @inheritdoc
+     */
     protected function getFileName()
     {
         return 'bluesteel42_settings.yml';

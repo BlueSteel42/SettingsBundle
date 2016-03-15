@@ -3,8 +3,8 @@
 namespace BlueSteel42\SettingsBundle\Adapter;
 
 use Symfony\Component\PropertyAccess\Exception\NoSuchIndexException;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Symfony\Component\PropertyAccess\PropertyAccessorBuilder;
 use Symfony\Component\PropertyAccess\PropertyPath;
 
 
@@ -100,7 +100,7 @@ abstract class AbstractAdapter implements AdapterInterface
     protected final function getAccessor()
     {
         if ($this->accessor === null) {
-            $this->accessor = PropertyAccess::createPropertyAccessor();
+            $this->accessor = (new PropertyAccessorBuilder())->enableExceptionOnInvalidIndex()->getPropertyAccessor();
         }
 
         return $this->accessor;

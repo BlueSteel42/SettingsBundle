@@ -54,4 +54,21 @@ class XmlAdapter implements AdapterInterface
     {
         // TODO: Implement setAll() method.
     }
+
+    /**
+     * @param $name
+     * @return AdapterInterface
+     */
+    public function delete($name)
+    {
+        // TODO: Implement delete() method.
+    }
+
+    /**
+     * @return AdapterInterface
+     */
+    public function flush()
+    {
+        // TODO: Implement flush() method.
+    }
 }

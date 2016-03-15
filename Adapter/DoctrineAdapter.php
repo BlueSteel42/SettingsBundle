@@ -56,4 +56,20 @@ class DoctrineAdapter implements AdapterInterface
     }
 
 
+    /**
+     * @param $name
+     * @return AdapterInterface
+     */
+    public function delete($name)
+    {
+        // TODO: Implement delete() method.
+    }
+
+    /**
+     * @return AdapterInterface
+     */
+    public function flush()
+    {
+        // TODO: Implement flush() method.
+    }
 }

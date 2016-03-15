@@ -3,3 +3,10 @@ imports:
 
 bluesteel42_settings:
   backend: doctrinedbal
+
+doctrine:
+  dbal:
+    connections:
+      default:
+        url: 'sqlite:///%kernel.root_dir%/bluesteel42_settings.sqlite'
+        path: '%kernel.root_dir%/bluesteel42_settings.sqlite'

@@ -2,4 +2,6 @@ imports:
   - { resource: config.yml }
 
 bluesteel42_settings:
-  backend: yml
+  backend:
+    yml:
+      path: '%kernel.cache_dir%'

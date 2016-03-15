@@ -3,10 +3,11 @@
 
 namespace BlueSteel42\SettingsBundle\Command;
 
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
@@ -51,6 +52,7 @@ EOT
         $argConnection = $input->getOption('connection');
         $argTable = $input->getOption('table_name');
         $dump = $input->getOption('sql-dump');
+        $connections = $this->getContainer()->getParameter('doctrine.connections');
 
         if (!$argConnection && !$argTable) {
             $con = ($this->getContainer()->getParameter('bluesteel42.settings.doctrine.connection'));
@@ -91,36 +93,38 @@ EOT
             $conAnswer = ($useQuestionCon) ? $this->getHelper('question')->ask($input, $output, $conQuestion) : $argConnection;
             $tblAnswer = ($useQuestionTable) ? $this->getHelper('question')->ask($input, $output, $tblQuestion) : $argTable;
 
-            $em = $this->getContainer()->get('doctrine')->getManager($conAnswer);
-            $conn = $em->getConnection();
+            if (!array_key_exists($conAnswer, $connections)) {
+                throw new \InvalidArgumentException(sprintf('The connection %s does not exist', $conAnswer));
+            }
+            /** @var Connection $conn */
+            $conn = $this->get($connections[$conAnswer]);
             $sm = $conn->getSchemaManager();
-
             $tableExists = $sm->tablesExist($tblAnswer);
+
             if (!$tableExists) {
                 $conn->beginTransaction();
                 try {
                     $fromSchema = $sm->createSchema();
                     $toSchema = clone $fromSchema;
-
                     $myTable = $toSchema->createTable($tblAnswer);
                     $myTable->addColumn("id", "string", array("customSchemaOptions" => array("unique" => true)));
                     $myTable->addColumn("val", "text");
                     $myTable->setPrimaryKey(array("id"));
-
                     $sqlQueryList = $fromSchema->getMigrateToSql($toSchema, $conn->getDatabasePlatform());
                     foreach ($sqlQueryList as $sql) {
                         if ($dump) {
-                            $output->writeln(sprintf("<comment>%s</comment>", $sql));
+                            $output->writeln($sql);
                         } else {
                             $conn->executeQuery($sql);
                             $conn->commit();
-                            $output->writeln(sprintf("Table %s successfuly created.", $tblAnswer));
+                            $output->writeln(sprintf("Table %s successfully created.", $tblAnswer));
                         }
                     }
                 } catch (\Exception $e) {
                     $conn->rollBack();
                     throw $e;
                 }
+
             } else {
                 if ($dump) {
                     $sql = sprintf("CREATE TABLE %s (id VARCHAR(255) NOT NULL UNIQUE, val LONGTEXT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB", $tblAnswer);

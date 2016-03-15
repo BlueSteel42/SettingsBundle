@@ -33,9 +33,23 @@ class Settings
         return $this;
     }
 
+    public function delete($name)
+    {
+        $this->adapter->delete($name);
+
+        return $this;
+    }
+
     public function getAll()
     {
         return $this->adapter->getAll();
+    }
+
+    public function flush()
+    {
+        $this->adapter->flush();
+
+        return $this;
     }
 
 }

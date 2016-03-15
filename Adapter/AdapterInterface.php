@@ -18,9 +18,15 @@ interface AdapterInterface
     /**
      * @param string $name Configuration key
      * @param mixed $value Configuration value
-     * @return mixed
+     * @return AdapterInterface
      */
     public function set($name, $value);
+
+    /**
+     * @param $name
+     * @return AdapterInterface
+     */
+    public function delete($name);
 
     /**
      * @return array
@@ -33,5 +39,8 @@ interface AdapterInterface
      */
     public function setAll(array $values);
 
+    /**
+     * @return AdapterInterface
+     */
     public function flush();
 }

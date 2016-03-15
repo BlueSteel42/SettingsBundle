@@ -19,12 +19,15 @@ class YmlAdapter extends AbstractBaseFileAdapter
      */
     protected function doGetValues()
     {
-        return (new Parser())->parse($this->getFileContents());
+        return (array)(new Parser())->parse($this->getFileContents());
     }
 
     public function flush()
     {
-        // TODO: Implement flush() method.
+        $yaml = (new Dumper())->dump($this->getValues(), 120);
+        $this->setFileContents($yaml);
+
+        return $this;
     }
 
     protected function getFileName()

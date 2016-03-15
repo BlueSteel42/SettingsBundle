@@ -45,6 +45,12 @@ class Settings
         return $this->adapter->getAll();
     }
 
+    public function setAll(array $values) {
+        $this->adapter->setAll($values);
+
+        return $this;
+    }
+
     public function flush()
     {
         $this->adapter->flush();

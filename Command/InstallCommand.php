@@ -101,14 +101,15 @@ EOT
             $sm = $conn->getSchemaManager();
             $tableExists = $sm->tablesExist($tblAnswer);
 
+            $conn->beginTransaction();
             if (!$tableExists) {
-                $conn->beginTransaction();
                 try {
                     $fromSchema = $sm->createSchema();
                     $toSchema = clone $fromSchema;
                     $myTable = $toSchema->createTable($tblAnswer);
                     $myTable->addColumn("id", "string", array("customSchemaOptions" => array("unique" => true)));
                     $myTable->addColumn("val", "text");
+                    $myTable->addColumn("hasChildren", "boolean");
                     $myTable->setPrimaryKey(array("id"));
                     $sqlQueryList = $fromSchema->getMigrateToSql($toSchema, $conn->getDatabasePlatform());
                     foreach ($sqlQueryList as $sql) {
@@ -127,9 +128,10 @@ EOT
 
             } else {
                 if ($dump) {
-                    $sql = sprintf("CREATE TABLE %s (id VARCHAR(255) NOT NULL UNIQUE, val LONGTEXT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB", $tblAnswer);
+                    $sql = sprintf("CREATE TABLE %s (id VARCHAR(255) NOT NULL UNIQUE, val LONGTEXT NOT NULL, hasChildren TINYINT(1) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB", $tblAnswer);
                     $output->writeln(sprintf("<comment>%s</comment>", $sql));
                 } else {
+                    $conn->rollBack();
                     throw new \RuntimeException(sprintf("Table %s already exists.", $tblAnswer));
                 }
             }

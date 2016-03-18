@@ -29,8 +29,13 @@ abstract class BaseAdapterTester extends TestCase
     public function testSetAndGet()
     {
         $this->service->set('foo', 'bar');
-
         $this->assertEquals($this->service->get('foo'), 'bar');
+    }
+
+    public function testFlush()
+    {
+        $t = $this->service->flush();
+        $this->assertInstanceOf('BlueSteel42\SettingsBundle\Service\Settings', $t);
     }
 
     public function testGetException()
@@ -39,7 +44,8 @@ abstract class BaseAdapterTester extends TestCase
         $this->service->get('unknown_key');
     }
 
-    public function testDelete() {
+    public function testDelete()
+    {
         $this->service->setAll(array('foo' => 'foo', 'bar' => 'bar'));
         $this->service->delete('bar');
 

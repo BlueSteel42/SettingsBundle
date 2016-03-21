@@ -69,6 +69,7 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid('You must configure only one backend among "yml", "xml" and "doctrinedbal".')
                     ->end()
                 ->end()
+                ->booleanNode('exceptions')->defaultValue(false)->end()
             ->end();
 
         return $treeBuilder;

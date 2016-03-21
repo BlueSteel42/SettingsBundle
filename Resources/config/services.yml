@@ -3,6 +3,7 @@ parameters:
   bluesteel42.settings.xml.path: "%kernel.cache_dir%/../data/bluesteel42_settings%"
   bluesteel42.settings.doctrine.connection: "default"
   bluesteel42.settings.doctrine.table: "bluesteel42_settings"
+  bluesteel42.settings.exceptions: false
 
 services:
 
@@ -10,6 +11,7 @@ services:
     class: BlueSteel42\SettingsBundle\Service\Settings
     arguments:
       - "@bluesteel42.settings.adapter_yml"
+      - "%bluesteel42.settings.exceptions%"
 
   bluesteel42.settings.adapter_doctrinedbal:
     class: BlueSteel42\SettingsBundle\Adapter\DoctrineAdapter

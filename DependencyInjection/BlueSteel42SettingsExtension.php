@@ -38,6 +38,8 @@ class BlueSteel42SettingsExtension extends Extension
         foreach ($unused_backends as $b) {
             $container->removeDefinition('bluesteel42.settings.adapter_'.$b);
         }
+
+        $container->setParameter('bluesteel42.setting.exceptions', $config['exceptions']);
     }
     public function getAlias()
     {

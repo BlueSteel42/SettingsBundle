@@ -15,7 +15,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('bluesteel42_settings');
 
-        $defaultPath = '%kernel.cache_dir%/../data/bluesteel42_settings%';
+        $defaultPath = '%kernel.root_dir%/Resources';
 
         $rootNode
             ->beforeNormalization()

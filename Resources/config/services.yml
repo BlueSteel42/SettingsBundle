@@ -1,8 +1,8 @@
 parameters:
   bluesteel42.settings.yml.path: "%kernel.cache_dir%/../data/bluesteel42_settings%"
   bluesteel42.settings.xml.path: "%kernel.cache_dir%/../data/bluesteel42_settings%"
-  bluesteel42.settings.doctrine.connection: "default"
-  bluesteel42.settings.doctrine.table: "bluesteel42_settings"
+  bluesteel42.settings.doctrinedbal.connection: "default"
+  bluesteel42.settings.doctrinedbal.table: "bluesteel42_settings"
   bluesteel42.settings.exceptions: false
 
 services:
@@ -17,8 +17,8 @@ services:
     class: BlueSteel42\SettingsBundle\Adapter\DoctrineAdapter
     arguments:
       - "@doctrine"
-      - "%bluesteel42.settings.doctrine.connection%"
-      - "%bluesteel42.settings.doctrine.table%"
+      - "%bluesteel42.settings.doctrinedbal.connection%"
+      - "%bluesteel42.settings.doctrinedbal.table%"
     public: false
 
   bluesteel42.settings.adapter_yml:

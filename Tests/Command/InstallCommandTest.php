@@ -17,8 +17,8 @@ class InstallCommandTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->connection = $this->getKernel('doctrinedbal')->getContainer()->getParameter('bluesteel42.settings.doctrine.connection');
-        $this->table_name = $this->getKernel('doctrinedbal')->getContainer()->getParameter('bluesteel42.settings.doctrine.table');
+        $this->connection = $this->getKernel('doctrinedbal')->getContainer()->getParameter('bluesteel42.settings.doctrinedbal.connection');
+        $this->table_name = $this->getKernel('doctrinedbal')->getContainer()->getParameter('bluesteel42.settings.doctrinedbal.table');
     }
 
 

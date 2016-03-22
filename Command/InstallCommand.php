@@ -55,16 +55,16 @@ EOT
         $connections = $this->getContainer()->getParameter('doctrine.connections');
 
         if (!$argConnection && !$argTable) {
-            $con = ($this->getContainer()->getParameter('bluesteel42.settings.doctrine.connection'));
-            $tbl = ($this->getContainer()->getParameter('bluesteel42.settings.doctrine.table'));
+            $con = ($this->getContainer()->getParameter('bluesteel42.settings.doctrinedbal.connection'));
+            $tbl = ($this->getContainer()->getParameter('bluesteel42.settings.doctrinedbal.table'));
             $useQuestionCon = true;
             $useQuestionTable = true;
         } elseif ($argConnection && !$argTable) {
             $con = $argConnection;
-            $tbl = ($this->getContainer()->getParameter('bluesteel42.settings.doctrine.table'));
+            $tbl = ($this->getContainer()->getParameter('bluesteel42.settings.doctrinedbal.table'));
             $useQuestionTable = true;
         } elseif (!$argConnection && $argTable) {
-            $con = ($this->getContainer()->getParameter('bluesteel42.settings.doctrine.connection'));
+            $con = ($this->getContainer()->getParameter('bluesteel42.settings.doctrinedbal.connection'));
             $useQuestionCon = true;
             $tbl = $argTable;
         } else {

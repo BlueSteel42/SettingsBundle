@@ -31,6 +31,10 @@ class BlueSteel42SettingsExtension extends Extension
             case 'yml':
                 $container->setParameter('bluesteel42.settings.' . $backend . '.path', $config['backend'][$backend]['path']);
                 break;
+            case 'doctrinedbal':
+                $container->setParameter('bluesteel42.settings.' . $backend . '.table', $config['backend'][$backend]['table']);
+                $container->setParameter('bluesteel42.settings.' . $backend . '.connection', $config['backend'][$backend]['connection']);
+                break;
         }
 
         $container->getDefinition('bluesteel42.settings')->replaceArgument(0, new Reference('bluesteel42.settings.adapter_'.$backend));

@@ -2,10 +2,9 @@
 
 namespace BlueSteel42\SettingsBundle\Tests;
 
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use BlueSteel42\SettingsBundle\Command\InstallCommand;
 
 class InstallCommandTest extends TestCase
@@ -17,8 +16,25 @@ class InstallCommandTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->connection = $this->getKernel('doctrinedbal')->getContainer()->getParameter('bluesteel42.settings.doctrinedbal.connection');
-        $this->table_name = $this->getKernel('doctrinedbal')->getContainer()->getParameter('bluesteel42.settings.doctrinedbal.table');
+        $container = $this->getKernel('doctrinedbal')->getContainer();
+        $this->connection = $container->getParameter('bluesteel42.settings.doctrinedbal.connection');
+        $this->table_name = $container->getParameter('bluesteel42.settings.doctrinedbal.table');
+
+        /**
+         * @var Connection $conn
+         */
+        $conn = $container->get($container->getParameter('doctrine.connections')[$this->connection]);
+        $sm = $conn->getSchemaManager();
+
+        if (in_array($this->table_name, $sm->listTableNames())) {
+            $from = $sm->createSchema();
+            $to = clone $from;
+            $to->dropTable($this->table_name);
+            $sqlQueryList = $from->getMigrateToSql($to, $conn->getDatabasePlatform());
+            foreach ($sqlQueryList as $sql) {
+                $conn->executeQuery($sql);
+            }
+        }
     }
 
 

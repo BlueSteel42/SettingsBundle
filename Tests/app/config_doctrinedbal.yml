@@ -9,4 +9,4 @@ doctrine:
     connections:
       default:
         url: 'sqlite:///%kernel.cache_dir%/bluesteel42_settings.sqlite'
-        path: '%kernel.root_dir%/bluesteel42_settings.sqlite'
+        path: '%kernel.cache_dir%/bluesteel42_settings.sqlite'

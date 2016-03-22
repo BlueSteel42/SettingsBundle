@@ -41,6 +41,7 @@ abstract class BaseAdapterTester extends TestCase
     public function testGetException()
     {
         $this->setExpectedException('Symfony\Component\PropertyAccess\Exception\NoSuchIndexException');
+        $this->service->setThrowExceptions(true);
         $this->service->get('unknown_key');
     }
 
@@ -49,6 +50,7 @@ abstract class BaseAdapterTester extends TestCase
         $this->service->setAll(array('foo' => 'foo', 'bar' => 'bar'));
         $this->service->delete('bar');
 
+        $this->service->setThrowExceptions(true);
         $this->setExpectedException('Symfony\Component\PropertyAccess\Exception\NoSuchIndexException');
         $this->service->get('bar');
     }

@@ -82,11 +82,11 @@ EOT
 
         if (array_key_exists('bluesteel42_settings', $cfg)) {
 
-            if ($cfg['bluesteel42_settings']['backend'] == 'yml' || $cfg['bluesteel42_settings']['backend'] == 'xml') {
-                $ext = $cfg['bluesteel42_settings']['backend'];
-                $locator = new FileLocator($this->getContainer()->getParameter(sprintf('bluesteel42.settings.%s.path', $ext)));
-                $cfgFile = $locator->locate(sprintf('bluesteel42_settings.%s', $ext), sprintf($this->getContainer()->getParameter(sprintf('bluesteel42.settings.%s.path', $ext), false)));
-            }
+//            if ($cfg['bluesteel42_settings']['backend'] == 'yml' || $cfg['bluesteel42_settings']['backend'] == 'xml') {
+//                $ext = $cfg['bluesteel42_settings']['backend'];
+//                $locator = new FileLocator($this->getContainer()->getParameter(sprintf('bluesteel42.settings.%s.path', $ext)));
+//                $cfgFile = $locator->locate(sprintf('bluesteel42_settings.%s', $ext), $this->getContainer()->getParameter(sprintf('bluesteel42.settings.%s.path', $ext), false));
+//            }
 
             $conQuestion = new Question(sprintf('<question>Please select Doctrine Connection: [%s]</question>', $con), $con);
             $tblQuestion = new Question(sprintf('<question>Please select Table Name: [%s]</question>', $tbl), $tbl);

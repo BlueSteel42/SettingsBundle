@@ -46,7 +46,7 @@ class InstallCommandTest extends TestCase
         list($command, $commandTester) = $this->createCommand();
         $commandTester->execute(array('command' => $command->getName(), '--connection' => $this->connection, '--table_name' => $this->table_name));
 
-        $out = sprintf("Table %s successfully created.", $this->table_name);
+        $out = sprintf("Table '%s' successfully created.", $this->table_name);
         $this->assertRegExp(sprintf("/^%s/", $out), $commandTester->getDisplay());
     }
 

@@ -3,6 +3,7 @@
 
 namespace BlueSteel42\SettingsBundle\Command;
 
+use BlueSteel42\SettingsBundle\Adapter\DoctrineAdapter;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -89,7 +90,7 @@ EOT
 
         if (!$tableExists) {
             //  Table not Exists
-            $this->createTableByToSchema($toSchema, $tblAnswer);
+            DoctrineAdapter::createTableByToSchema($toSchema, $tblAnswer);
             $sqlQueryList = $fromSchema->getMigrateToSql($toSchema, $conn->getDatabasePlatform());
             $conn->beginTransaction();
             try {
@@ -112,7 +113,7 @@ EOT
             if ($dump) {
                 //  Dump Only output
                 $tmpSuffix = '_bs42_';
-                $this->createTableByToSchema($toSchema, $tblAnswer . $tmpSuffix);
+                DoctrineAdapter::createTableByToSchema($toSchema, $tblAnswer . $tmpSuffix);
                 $sqlQueryList = $fromSchema->getMigrateToSql($toSchema, $conn->getDatabasePlatform());
                 foreach ($sqlQueryList as $sql) {
                     $sql = str_replace($tmpSuffix, '', $sql);
@@ -126,18 +127,4 @@ EOT
 
     }
 
-    /**
-     * @param \Doctrine\DBAL\Schema\ $toSchema
-     * @param string $tblAnswer
-     * @return \Doctrine\DBAL\Schema\Table $myTable
-     */
-    protected function createTableByToSchema($toSchema, $tblAnswer)
-    {
-        $myTable = $toSchema->createTable($tblAnswer);
-        $myTable->addColumn("id", "string", array("customSchemaOptions" => array("unique" => true)));
-        $myTable->addColumn("val", "text");
-        $myTable->addColumn("hasChildren", "boolean");
-        $myTable->setPrimaryKey(array("id"));
-        return $myTable;
-    }
 }

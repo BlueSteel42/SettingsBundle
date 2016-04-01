@@ -63,7 +63,6 @@ abstract class AbstractAdapter implements AdapterInterface
         } else {
             $last = array_pop($elements);
             $pathParent = sprintf('[%s]', implode('][', $elements));
-
             $parent = $this->getAccessor()->getValue($this->getValues(), $pathParent);
             if (!array_key_exists($last, $parent)) {
                 throw new NoSuchIndexException(sprintf('The key %s does not exist', $name));

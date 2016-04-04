@@ -30,6 +30,10 @@ abstract class BaseAdapterTester extends TestCase
     {
         $this->service->set('foo', 'bar');
         $this->assertEquals($this->service->get('foo'), 'bar');
+
+        $this->service->setThrowExceptions(true);
+        $this->setExpectedException('Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException');
+        $this->service->set('foo.baz', 'bar');
     }
 
     public function testFlush()

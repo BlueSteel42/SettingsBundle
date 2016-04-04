@@ -35,7 +35,6 @@ abstract class AbstractAdapter implements AdapterInterface
     public function set($name, $value)
     {
         $name = $this->normalizePath($name);
-
         try {
             $this->delete($name);
         } catch (NoSuchIndexException $e) {
@@ -64,7 +63,7 @@ abstract class AbstractAdapter implements AdapterInterface
             $last = array_pop($elements);
             $pathParent = sprintf('[%s]', implode('][', $elements));
             $parent = $this->getAccessor()->getValue($this->getValues(), $pathParent);
-            if (!array_key_exists($last, $parent)) {
+            if (!is_array($parent) || !array_key_exists($last, $parent)) {
                 throw new NoSuchIndexException(sprintf('The key %s does not exist', $name));
             }
             unset($parent[$last]);

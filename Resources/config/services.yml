@@ -1,17 +1,27 @@
 parameters:
   bluesteel42.settings.yml.path: "%kernel.cache_dir%/../data/bluesteel42_settings%"
   bluesteel42.settings.xml.path: "%kernel.cache_dir%/../data/bluesteel42_settings%"
+  bluesteel42.settings.cache.file_path: "%kernel.cache_dir%"
   bluesteel42.settings.doctrinedbal.connection: "default"
   bluesteel42.settings.doctrinedbal.table: "bluesteel42_settings"
   bluesteel42.settings.exceptions: false
 
 services:
 
-  bluesteel42.settings:
-    class: BlueSteel42\SettingsBundle\Service\Settings
+  bluesteel42.settings.cache_null:
+    class: BlueSteel42\SettingsBundle\Cache\NullAdapter
+    public: false
+
+  bluesteel42.settings.cache_file:
+    class: BlueSteel42\SettingsBundle\Cache\FileAdapter
     arguments:
-      - "@bluesteel42.settings.adapter_yml"
-      - "%bluesteel42.settings.exceptions%"
+      - "@file_locator"
+      - "%bluesteel42.settings.cache.file_path%"
+    public: false
+
+  bluesteel42.settings.cache_memcached:
+    class: BlueSteel42\SettingsBundle\Cache\MemcachedAdapter
+    public: false
 
   bluesteel42.settings.adapter_doctrinedbal:
     class: BlueSteel42\SettingsBundle\Adapter\DoctrineAdapter
@@ -34,3 +44,9 @@ services:
       - "@file_locator"
       - "%bluesteel42.settings.xml.path%"
     public: false
+
+  bluesteel42.settings:
+    class: BlueSteel42\SettingsBundle\Service\Settings
+    arguments:
+      - "@bluesteel42.settings.adapter_yml"
+      - "%bluesteel42.settings.exceptions%"

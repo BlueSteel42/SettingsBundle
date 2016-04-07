@@ -6,6 +6,7 @@ use Symfony\Component\PropertyAccess\Exception\NoSuchIndexException;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyAccess\PropertyAccessorBuilder;
 use Symfony\Component\PropertyAccess\PropertyPath;
+use BlueSteel42\SettingsBundle\Cache\CacheInterface;
 
 
 abstract class AbstractAdapter implements AdapterInterface
@@ -20,6 +21,11 @@ abstract class AbstractAdapter implements AdapterInterface
      * @var PropertyAccessor
      */
     protected $accessor;
+
+    /**
+     * @var CacheInterface
+     */
+    protected $cache;
 
     /**
      * @inheritDoc
@@ -51,22 +57,23 @@ abstract class AbstractAdapter implements AdapterInterface
     public function delete($name)
     {
         $path = new PropertyPath($name);
-
         $elements = $path->getElements();
 
         if (1 == count($elements)) {
-            if (!array_key_exists($elements[0], $this->getValues())) {
+            if (!array_key_exists($elements[0], (array)$this->getValues())) {
                 throw new NoSuchIndexException(sprintf('The key %s does not exist', $name));
             }
             unset ($this->values[$elements[0]]);
         } else {
             $last = array_pop($elements);
             $pathParent = sprintf('[%s]', implode('][', $elements));
-            $parent = $this->getAccessor()->getValue($this->getValues(), $pathParent);
+            $parent = ($this->getValues()) ? $this->getAccessor()->getValue($this->getValues(), $pathParent) : null;
+
             if (!is_array($parent) || !array_key_exists($last, $parent)) {
                 throw new NoSuchIndexException(sprintf('The key %s does not exist', $name));
             }
             unset($parent[$last]);
+
 
             $this->getAccessor()->setValue($this->values, $pathParent, $parent);
         }
@@ -93,6 +100,15 @@ abstract class AbstractAdapter implements AdapterInterface
     }
 
     /**
+     * @param CacheInterface $cache
+     * @return $this
+     */
+    public function setCacheManager(CacheInterface $cache){
+        $this->cache = $cache;
+        return $this;
+    }
+
+    /**
      * @return PropertyAccessor
      */
     protected final function getAccessor()
@@ -109,10 +125,13 @@ abstract class AbstractAdapter implements AdapterInterface
      */
     protected function getValues()
     {
-        if ($this->values === null) {
-            $this->values = (array)$this->doGetValues();
+        if (null === $this->values) {
+            $this->values = $this->cache->getValues();
+            if (null === $this->values || false === $this->values) {
+                $this->values = (array)$this->doGetValues();
+                $this->cache->setValues($this->values);
+            }
         }
-
         return $this->values;
     }
 
@@ -128,7 +147,22 @@ abstract class AbstractAdapter implements AdapterInterface
     }
 
     /**
+     * @return $this
+     */
+    public function flush()
+    {
+        $this->doFlush();
+        $this->cache->setValues($this->getValues());
+        return $this;
+    }
+
+    /**
      * @return array
      */
     protected abstract function doGetValues();
+
+    /**
+     * @return mixed
+     */
+    protected abstract function doFlush();
 }

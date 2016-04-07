@@ -95,7 +95,7 @@ class DoctrineAdapter extends AbstractAdapter
      * @return AdapterInterface
      * @throws \Exception
      */
-    public function flush()
+    protected function doFlush()
     {
         $this->conn->beginTransaction();
         try {

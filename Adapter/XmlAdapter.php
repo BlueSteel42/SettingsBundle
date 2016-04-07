@@ -28,7 +28,7 @@ class XmlAdapter extends AbstractBaseFileAdapter
     /**
      * @inheritdoc
      */
-    public function flush()
+    protected function doFlush()
     {
         $dom = new \DOMDocument();
         $root = $dom->createElement('root');

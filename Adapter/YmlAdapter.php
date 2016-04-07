@@ -25,7 +25,7 @@ class YmlAdapter extends AbstractBaseFileAdapter
     /**
      * @inheritdoc
      */
-    public function flush()
+    protected function doFlush()
     {
         $dumper = new Dumper();
         $this->setFileContents($dumper->dump($this->getValues(), 20));

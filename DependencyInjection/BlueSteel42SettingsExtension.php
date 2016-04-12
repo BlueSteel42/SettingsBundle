@@ -50,8 +50,8 @@ class BlueSteel42SettingsExtension extends Extension
                 break;
         }
 
-        $container->getDefinition('bluesteel42.settings.adapter_'.$backend)->addMethodCall('setCacheManager', array(new Reference($cache_service)));
-        $container->getDefinition('bluesteel42.settings')->replaceArgument(0, new Reference('bluesteel42.settings.adapter_'.$backend));
+        $container->getDefinition('bluesteel42.settings.adapter_' . $backend)->addMethodCall('setCacheManager', array(new Reference($cache_service)));
+        $container->getDefinition('bluesteel42.settings')->replaceArgument(0, new Reference('bluesteel42.settings.adapter_' . $backend));
 
         foreach ($unused_backends as $b) {
             $container->removeDefinition('bluesteel42.settings.adapter_' . $b);
@@ -60,7 +60,9 @@ class BlueSteel42SettingsExtension extends Extension
 
     protected function setCache(array $config, ContainerBuilder $container)
     {
-
+        if (!array_key_exists('cache', $config)) {
+            return 'bluesteel42.settings.cache_null';
+        }
         $cache = key($config['cache']);
         $unused_caches = array_diff(array('null', 'file', 'memcached'), array($cache));
 
@@ -72,7 +74,7 @@ class BlueSteel42SettingsExtension extends Extension
                 break;
             case 'memcached':
                 $def = $container->getDefinition('bluesteel42.settings.cache_memcached');
-                foreach($config['cache']['memcached']['servers'] as $s){
+                foreach ($config['cache']['memcached']['servers'] as $s) {
                     $def->addMethodCall('addServer', array($s['host'], $s['port']));
                 }
                 break;

@@ -28,11 +28,13 @@ abstract class AbstractAdapter implements AdapterInterface
     protected $cache;
 
     /**
-     * @inheritDoc
+     * @param string $name
+     * @param mixed $default
+     * @return mixed|null
      */
-    public function get($name)
+    public function get($name, $default = null)
     {
-        return $this->getAccessor()->getValue($this->getValues(), $this->normalizePath($name));
+        return ($this->getAccessor()->getValue($this->getValues(), $this->normalizePath($name))) ? ($this->getAccessor()->getValue($this->getValues(), $this->normalizePath($name))) : $default;
     }
 
     /**

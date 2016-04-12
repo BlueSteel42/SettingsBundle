@@ -10,10 +10,11 @@ namespace BlueSteel42\SettingsBundle\Adapter;
 interface AdapterInterface
 {
     /**
-     * @param string $name Configuration key
+     * @param $name
+     * @param mixed $default
      * @return mixed
      */
-    public function get($name);
+    public function get($name, $default = null);
 
     /**
      * @param string $name Configuration key

@@ -30,7 +30,7 @@
     },
     "autoload": {
         "psr-4": {
-            "BlueSteel42\\SettingsBundle": "src/BlueSteel42/SettingsBundle"
+            "BlueSteel42\\SettingsBundle\\": "src/BlueSteel42/SettingsBundle"
         }
     },
     "extra": {

@@ -28,7 +28,7 @@ class Settings
         $this->throwExceptions = $exceptions;
     }
 
-    public function get($name)
+    public function get($name, $default = null)
     {
         if ($this->throwExceptions) {
             return $this->adapter->get($name);
@@ -36,7 +36,7 @@ class Settings
             try {
                 return $this->adapter->get($name);
             } catch (\Exception $e) {
-                return null;
+                return $default;
             }
         }
     }

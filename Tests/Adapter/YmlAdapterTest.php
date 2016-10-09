@@ -2,7 +2,7 @@
 
 namespace BlueSteel42\SettingsBundle\Tests\Adapter;
 
-class YmlAdapterTest extends BaseAdapterTester
+class YmlAdapterTest extends BaseAdapterTest
 {
     protected $env = 'yml';
 }

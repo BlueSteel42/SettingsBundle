@@ -1,11 +1,10 @@
 <?php
 
-
 namespace BlueSteel42\SettingsBundle\Tests\Adapter;
 
 use BlueSteel42\SettingsBundle\Tests\TestCase;
 
-abstract class BaseAdapterTester extends TestCase
+abstract class BaseAdapterTest extends TestCase
 {
     protected $env;
 

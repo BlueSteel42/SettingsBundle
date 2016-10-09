@@ -4,7 +4,7 @@ namespace BlueSteel42\SettingsBundle\Tests\Adapter;
 
 use BlueSteel42\SettingsBundle\Adapter\DoctrineAdapter;
 
-class DoctrineAdapterTest extends BaseAdapterTester
+class DoctrineAdapterTest extends BaseAdapterTest
 {
     protected $env = 'doctrinedbal';
 
